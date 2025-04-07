@@ -28,6 +28,5 @@ export const DeleteImage = async (publicId) => {
     { public_id: publicId },
     { headers: { Authorization: `Basic ${auth}` } }
   );
-
-  console.log(response.data);
+  return response.data; // Displays file URL and other details
 };

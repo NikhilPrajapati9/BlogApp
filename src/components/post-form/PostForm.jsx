@@ -40,7 +40,7 @@ export default function PostForm({ post }) {
       }
     } else {
       const file = await UploadFile(data.image[0]);
-      console.log("file =>", file);
+      ("file =>", file);
       
 
       if (file) {
@@ -60,8 +60,6 @@ export default function PostForm({ post }) {
 
 
         if (dbPost) {
-          console.log("post created successfully", dbPost);
-
           navigate(`/post/${dbPost.$id}`);
         }
       }

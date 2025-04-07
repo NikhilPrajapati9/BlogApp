@@ -9,7 +9,6 @@ import Logo from "../Logo";
 function Header() {
   const authStatus = useSelector((state) => state.auth.status);
   const navigate = useNavigate();
-  console.log("headerauthstaur =>", authStatus);
   
 
   const navItems = [
