@@ -16,6 +16,8 @@ export default function RTE({ name, control, label, defaultValue = "" }) {
             apiKey={conf.tinyMCE_Api_key}
             initialValue={defaultValue}
             init={{
+              skin: "oxide-dark",
+              content_css: "dark",
               initialValue: defaultValue,
               height: 500,
               menubar: true,

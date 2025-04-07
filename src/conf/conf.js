@@ -9,6 +9,7 @@ const conf = {
     couldinary_Api_key: String(import.meta.env.VITE_CLOUDINARY_API_KEY),
     coulinary_api_secret: String(import.meta.env.VITE_CLOUDINARY_API_SECRET),
     coulinary_preset: String(import.meta.env.VITE_CLOUDINARY_PRESET),
+    gemini_api_key: String(import.meta.env.VITE_GEMINI_API_KEY),
 }
 // there was a name issue with the import.meta.env.VITE_APPWRITE_URL, it was later fixed in debugging video
 

@@ -1,12 +1,16 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button, Input, RTE, Select } from "..";
 import appwriteService from "../../appwrite/config";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { DeleteImage, UploadFile } from "../Cloudinary";
+import { IoMdSend } from "react-icons/io";
+import { generateText } from "../../conf/ai";
+import { markdownToText } from "../../conf/markdownToText";
 
 export default function PostForm({ post }) {
+  const [inputValue, setInputValue] = useState("");
   const { register, handleSubmit, watch, setValue, control, getValues } =
     useForm({
       defaultValues: {
@@ -40,8 +44,6 @@ export default function PostForm({ post }) {
       }
     } else {
       const file = await UploadFile(data.image[0]);
-      ("file =>", file);
-      
 
       if (file) {
         const fileUrl = file.secure_url;
@@ -58,11 +60,23 @@ export default function PostForm({ post }) {
           imagePiblicId: file.public_id,
         });
 
-
         if (dbPost) {
           navigate(`/post/${dbPost.$id}`);
         }
       }
+    }
+  };
+
+  const aiInputSubmitHandler = async () => {
+    try {
+      const markdownText = await generateText(inputValue);
+      const plaintext = markdownToText(markdownText);
+      if (plaintext) {
+        setValue("content", getValues("content") + plaintext);
+        setInputValue("");
+      }
+    } catch (err) {
+      console.log("error", err);
     }
   };
 
@@ -88,7 +102,7 @@ export default function PostForm({ post }) {
   }, [watch, slugTransform, setValue]);
 
   return (
-    <form onSubmit={handleSubmit(submit)} className="flex flex-wrap">
+    <form onSubmit={handleSubmit(submit)} className="flex text-white flex-wrap">
       <div className="w-2/3 px-2">
         <Input
           label="Title :"
@@ -144,6 +158,21 @@ export default function PostForm({ post }) {
         >
           {post ? "Update" : "Submit"}
         </Button>
+
+        <div className="mt-10 ">
+          <h1 className="text-lg font-medium mb-2">Write with AI</h1>
+          <div className="flex border-2 border-gray-500 shadow-2xl bg-gray-600 rounded-xl">
+            <input
+              className="w-full text-lg px-2 h-10 outline-none bg-none focus:bg-none border-none"
+              type="text"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+            />
+            <Button onClick={aiInputSubmitHandler} bgColor="bg-gray-800">
+              <IoMdSend />
+            </Button>
+          </div>
+        </div>
       </div>
     </form>
   );
