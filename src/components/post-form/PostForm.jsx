@@ -8,9 +8,11 @@ import { DeleteImage, UploadFile } from "../Cloudinary";
 import { IoMdSend } from "react-icons/io";
 import { generateText } from "../../conf/ai";
 import { markdownToText } from "../../conf/markdownToText";
+import { FiLoader } from "react-icons/fi";
 
 export default function PostForm({ post }) {
   const [inputValue, setInputValue] = useState("");
+  const [loading, setLoading] = useState(false);
   const { register, handleSubmit, watch, setValue, control, getValues } =
     useForm({
       defaultValues: {
@@ -25,6 +27,7 @@ export default function PostForm({ post }) {
   const userData = useSelector((state) => state.auth.userData);
 
   const submit = async (data) => {
+    setLoading(true);
     if (post) {
       const file = data.image[0] ? await UploadFile(data.image[0]) : null;
       //   console.log("file", file);
@@ -42,6 +45,7 @@ export default function PostForm({ post }) {
       if (dbPost) {
         navigate(`/post/${dbPost.$id}`);
       }
+      setLoading(false);
     } else {
       const file = await UploadFile(data.image[0]);
 
@@ -63,6 +67,7 @@ export default function PostForm({ post }) {
         if (dbPost) {
           navigate(`/post/${dbPost.$id}`);
         }
+        setLoading(false);
       }
     }
   };
@@ -102,8 +107,8 @@ export default function PostForm({ post }) {
   }, [watch, slugTransform, setValue]);
 
   return (
-    <form onSubmit={handleSubmit(submit)} className="flex text-white flex-wrap">
-      <div className="w-2/3 px-2">
+    <form onSubmit={handleSubmit(submit)} className=" md:flex text-white">
+      <div className="min-w-60 sm:w-full md:w-2/3 md:px-2">
         <Input
           label="Title :"
           placeholder="Title"
@@ -121,6 +126,20 @@ export default function PostForm({ post }) {
             });
           }}
         />
+        <div className="mb-4">
+          <h1 className="text-lg font-medium mb-2">Write with AI</h1>
+          <div className="flex border-2 border-gray-500 shadow-2xl bg-gray-600 rounded-xl">
+            <input
+              className="w-full text-lg px-2 h-10 outline-none bg-none focus:bg-none border-none"
+              type="text"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+            />
+            <Button onClick={aiInputSubmitHandler} bgColor="bg-gray-800">
+              <IoMdSend />
+            </Button>
+          </div>
+        </div>
         <RTE
           label="Content :"
           name="content"
@@ -128,7 +147,7 @@ export default function PostForm({ post }) {
           defaultValue={getValues("content")}
         />
       </div>
-      <div className="w-1/3 px-2">
+      <div className="min-w-60 mt-4 sm:w-full md:mt-0 md:w-1/3 md:px-2">
         <Input
           label="Featured Image :"
           type="file"
@@ -154,25 +173,11 @@ export default function PostForm({ post }) {
         <Button
           type="submit"
           bgColor={post ? "bg-green-500" : undefined}
-          className="w-full"
+          className={`w-full cursor-pointer ${loading && "cursor-not-allowed animate-spin"}`}
         >
           {post ? "Update" : "Submit"}
+          {loading && <FiLoader />}
         </Button>
-
-        <div className="mt-10 ">
-          <h1 className="text-lg font-medium mb-2">Write with AI</h1>
-          <div className="flex border-2 border-gray-500 shadow-2xl bg-gray-600 rounded-xl">
-            <input
-              className="w-full text-lg px-2 h-10 outline-none bg-none focus:bg-none border-none"
-              type="text"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-            />
-            <Button onClick={aiInputSubmitHandler} bgColor="bg-gray-800">
-              <IoMdSend />
-            </Button>
-          </div>
-        </div>
       </div>
     </form>
   );
