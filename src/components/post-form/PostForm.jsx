@@ -173,10 +173,10 @@ export default function PostForm({ post }) {
         <Button
           type="submit"
           bgColor={post ? "bg-green-500" : undefined}
-          className={`w-full cursor-pointer ${loading && "cursor-not-allowed animate-spin"}`}
+          className={`w-full cursor-pointer ${loading && "cursor-not-allowed"}`}
         >
           {post ? "Update" : "Submit"}
-          {loading && <FiLoader />}
+          {loading &&  <FiLoader className="animate-spin text-xl"/> }
         </Button>
       </div>
     </form>

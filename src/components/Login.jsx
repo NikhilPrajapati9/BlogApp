@@ -5,6 +5,8 @@ import { Button, Input, Logo } from "./index";
 import { useDispatch } from "react-redux";
 import authService from "../appwrite/auth";
 import { useForm } from "react-hook-form";
+import { FiLoader } from "react-icons/fi";
+
 
 function Login() {
   const navigate = useNavigate();
@@ -81,11 +83,11 @@ function Login() {
             />
             <Button
               type="submit"
-              className={`w-full cursor-pointer ${
-                loading && "cursor-not-allowed animate-spin"
+              className={`w-full mt-10 flex items-center justify-center cursor-pointer ${
+                loading && "cursor-not-allowed"
               }`}
             >
-              {loading ? <FiLoader /> : "Sign in"}
+              {loading ? <FiLoader className="animate-spin text-xl"/> : "Sign in"}
             </Button>
           </div>
         </form>

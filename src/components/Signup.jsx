@@ -5,6 +5,7 @@ import { login } from "../store/authSlice";
 import { Button, Input, Logo } from "./index.js";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
+import { FiLoader } from "react-icons/fi";
 
 function Signup() {
   const navigate = useNavigate();
@@ -88,11 +89,15 @@ function Signup() {
             />
             <Button
               type="submit"
-              className={`w-full cursor-pointer ${
-                loading && "cursor-not-allowed animate-spin"
+              className={`w-full mt-10 flex items-center justify-center cursor-pointer ${
+                loading && "cursor-not-allowed"
               }`}
             >
-              {loading ? <FiLoader /> : "Create Account"}
+              {loading ? (
+                 <FiLoader className="animate-spin text-xl"/> 
+              ) : (
+                "Create Account"
+              )}
             </Button>
           </div>
         </form>
